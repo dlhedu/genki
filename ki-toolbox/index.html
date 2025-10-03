@@ -1,1 +1,1117 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KI-Toolbox - Tools für den Unterricht</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --secondary: #10b981;
+            --accent: #8b5cf6;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --hover-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            animation: slideDown 0.5s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--bg-gradient);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            transform: translateX(-5px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 3rem 0;
+            animation: fadeIn 0.8s ease;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            background: var(--bg-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Filter Section */
+        .filter-section {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+
+        .filter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: #f3f4f6;
+            border-radius: 10px;
+            padding: 0.5rem 1rem;
+            flex: 1;
+            max-width: 400px;
+        }
+
+        .search-box input {
+            border: none;
+            background: none;
+            outline: none;
+            flex: 1;
+            font-size: 1rem;
+            color: var(--text-primary);
+        }
+
+        .search-icon {
+            color: var(--text-secondary);
+            margin-right: 0.5rem;
+        }
+
+        .filter-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-tag {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            background: #f3f4f6;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            font-size: 0.9rem;
+        }
+
+        .filter-tag:hover {
+            background: #e5e7eb;
+            transform: translateY(-2px);
+        }
+
+        .filter-tag.active {
+            background: var(--bg-gradient);
+            color: white;
+            border-color: transparent;
+        }
+
+        /* Tools Grid */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .tool-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+            animation: fadeInUp 0.8s ease calc(var(--index) * 0.1s) both;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: var(--hover-shadow);
+        }
+
+        .tool-header {
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tool-header::before {
+            content: '';
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            top: -50%;
+            right: -50%;
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-20px, 20px); }
+        }
+
+        .tool-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .tool-name {
+            font-size: 1.5rem;
+            color: white;
+            margin-bottom: 0.25rem;
+            font-weight: 600;
+        }
+
+        .tool-type {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.9rem;
+        }
+
+        .tool-body {
+            padding: 1.5rem;
+        }
+
+        .tool-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .tool-features {
+            list-style: none;
+            margin-bottom: 1rem;
+        }
+
+        .tool-features li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .tool-features li::before {
+            content: '✓';
+            color: var(--secondary);
+            margin-right: 0.5rem;
+            font-weight: bold;
+        }
+
+        .tool-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .tool-tag {
+            padding: 0.25rem 0.75rem;
+            background: #f3f4f6;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            color: var(--text-primary);
+        }
+
+        .tool-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .tool-price {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .tool-price.free {
+            color: var(--secondary);
+        }
+
+        .tool-price.paid {
+            color: var(--warning);
+        }
+
+        .tool-price.premium {
+            color: var(--accent);
+        }
+
+        .tool-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: gap 0.3s ease;
+        }
+
+        .tool-link:hover {
+            gap: 0.5rem;
+        }
+
+        /* Comparison Table */
+        .comparison-section {
+            margin: 4rem 0;
+            animation: fadeIn 1s ease 1s both;
+        }
+
+        .comparison-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+        }
+
+        .comparison-table {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: var(--bg-gradient);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        tr:hover {
+            background: #f9fafb;
+        }
+
+        .feature-check {
+            color: var(--secondary);
+            font-size: 1.2rem;
+        }
+
+        .feature-cross {
+            color: var(--danger);
+            font-size: 1.2rem;
+        }
+
+        /* Info Cards */
+        .info-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 3rem 0;
+        }
+
+        .info-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+        }
+
+        .info-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--bg-gradient);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .info-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .info-text {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .filter-header {
+                flex-direction: column;
+            }
+            
+            .search-box {
+                max-width: 100%;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #f3f4f6;
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="../index.html" class="back-button">
+                ← Zurück zur Übersicht
+            </a>
+            <div style="display: flex; gap: 1rem;">
+                <span style="color: var(--text-secondary);">Stand: Oktober 2025</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1>🧰 KI-Toolbox für den Unterricht</h1>
+            <p>Entdecke die besten KI-Tools für verschiedene Unterrichtsszenarien. Von Text-Generation bis Bildbearbeitung - alles auf einen Blick.</p>
+        </section>
+
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <div class="filter-header">
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" placeholder="Tool suchen..." id="searchInput">
+                </div>
+                <div class="filter-tags">
+                    <span class="filter-tag active" data-filter="all">Alle</span>
+                    <span class="filter-tag" data-filter="text">Text</span>
+                    <span class="filter-tag" data-filter="bild">Bild</span>
+                    <span class="filter-tag" data-filter="audio">Audio</span>
+                    <span class="filter-tag" data-filter="video">Video</span>
+                    <span class="filter-tag" data-filter="praesentation">Präsentation</span>
+                    <span class="filter-tag" data-filter="kostenlos">Kostenlos</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tools Grid -->
+        <div class="tools-grid" id="toolsGrid">
+            <!-- ChatGPT -->
+            <div class="tool-card" style="--index: 0" data-categories="text,kostenlos">
+                <div class="tool-header">
+                    <div class="tool-icon">💬</div>
+                    <h3 class="tool-name">ChatGPT</h3>
+                    <p class="tool-type">Text-KI & Multifunktion</p>
+                </div>
+                <div class="tool-body">
+                    <p class="tool-description">
+                        Der Marktführer unter den KI-Chatbots. Ideal für Textgenerierung, Unterrichtsvorbereitung und individuelle Lernunterstützung.
+                    </p>
+                    <ul class="tool-features">
+                        <li>Texte schreiben und überarbeiten</li>
+                        <li>Unterrichtsmaterialien erstellen</li>
+                        <li>Code-Erklärungen</li>
+                        <li>Bildgenerierung (DALL-E)</li>
+                    </ul>
+                    <div class="tool-tags">
+                        <span class="tool-tag">GPT-4o</span>
+                        <span class="tool-tag">Multimodal</span>
+                        <span class="tool-tag">API verfügbar</span>
+                    </div>
+                    <div class="tool-footer">
+                        <span class="tool-price free">Kostenlos / Plus: $20/Monat</span>
+                        <a href="#" class="tool-link">Details →</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Claude -->
+            <div class="tool-card" style="--index: 1" data-categories="text,kostenlos">
+                <div class="tool-header">
+                    <div class="tool-icon">🤖</div>
+                    <h3 class="tool-name">Claude 3.5</h3>
+                    <p class="tool-type">Fortgeschrittene Text-KI</p>
+                </div>
+                <div class="tool-body">
+                    <p class="tool-description">
+                        Anthropics KI mit besonders natürlichen Konversationen und starken analytischen Fähigkeiten. Ideal für komplexe Aufgaben.
+                    </p>
+                    <ul class="tool-features">
+                        <li>Lange Kontextfenster (200k Token)</li>
+                        <li>Präzise Textanalyse</li>
+                        <li>Sichere Antworten</li>
+                        <li>Code-Generierung</li>
+                    </ul>
+                    <div class="tool-tags">
+                        <span class="tool-tag">Sonnet</span>
+                        <span class="tool-tag">Opus</span>
+                        <span class="tool-tag">Ethisch</span>
+                    </div>
+                    <div class="tool-footer">
+                        <span class="tool-price free">Kostenlos / Pro: $20/Monat</span>
+                        <a href="#" class="tool-link">Details →</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fobizz -->
+            <div class="tool-card" style="--index: 2" data-categories="text,praesentation">
+                <div class="tool-header">
+                    <div class="tool-icon">🎓</div>
+                    <h3 class="tool-name">Fobizz</h3>
+                    <p class="tool-type">Bildungsplattform</p>
+                </div>
+                <div class="tool-body">
+                    <p class="tool-description">
+                        Speziell für Schulen entwickelte KI-Plattform mit Datenschutz-Konformität und vielfältigen Unterrichtstools.
+                    </p>
+                    <ul class="tool-features">
+                        <li>DSGVO-konform</li>
+                        <li>Schüler-Accounts möglich</li>
+                        <li>Integrierte KI-Tools</li>
+                        <li>Fortbildungen inklusive</li>
+                    </ul>
+                    <div class="tool-tags">
+                        <span class="tool-tag">Schullizenz</span>
+                        <span class="tool-tag">DSGVO</span>
+                        <span class="tool-tag">Deutsch</span>
+                    </div>
+                    <div class="tool-footer">
+                        <span class="tool-price paid">Schullizenz erforderlich</span>
+                        <a href="#" class="tool-link">Details →</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Microsoft Copilot -->
+            <div class="tool-card" style="--index: 3" data-categories="text,kostenlos">
+                <div class="tool-header">
+                    <div class="tool-icon">🪟</div>
+                    <h3 class="tool-name">Microsoft Copilot</h3>
+                    <p class="tool-type">Integrierte KI-Assistenz</p>
+                </div>
+                <div class="tool-body">
+                    <p class="tool-description">
+                        In Microsoft 365 integrierte KI für Word, PowerPoint, Excel und Teams. Perfekt für Schulen mit Microsoft-Infrastruktur.
+                    </p>
+                    <ul class="tool-features">
+                        <li>Office-Integration</li>
+                        <li>Dokumenten-Analyse</li>
+                        <li>E-Mail-Zusammenfassungen</li>
+                        <li>Meeting-Protokolle</li>
+                    </ul>
+                    <div class="tool-tags">
+                        <span class="tool-tag">Office 365</span>
+                        <span class="tool-tag">Business</span>
+                        <span class="tool-tag">Teams</span>
+                    </div>
+                    <div class="tool-footer">
+                        <span class="tool-price paid">Ab $30/Nutzer/Monat</span>
+                        <a href="#" class="tool-link">Details →</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DALL-E 3 -->
+            <div class="tool-card" style="--index: 4" data-categories="bild">
+                <div class="tool-header">
+                    <div class="tool-icon">🎨</div>
+                    <h3 class="tool-name">DALL-E 3</h3>
+                    <p class="tool-type">Bildgenerierung</p>
+                </div>
+                <div class="tool-body">
+                    <p class="tool-description">
+                        OpenAIs fortschrittlichste Bildgenerierungs-KI. Erstellt hochqualitative Bilder aus Textbeschreibungen.
+                    </p>
+                    <ul class="tool-features">
+                        <li>Fotorealistische Bilder</li>
+                        <li>Künstlerische Stile</li>
+                        <li>In ChatGPT integriert</li>
+                        <li>Konsistente Charaktere</li>
+                    </ul>
+                    <div class="tool-tags">
+                        <span class="tool-tag">OpenAI</span>
+                        <span class="tool-tag">Kreativ</span>
+                        <span class="tool-tag">HD</span>
+                    </div>
+                    <div class="tool-footer">
+                        <span class="tool-price paid">Via ChatGPT Plus</span>
+                        <a href="#" class="tool-link">Details →</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Midjourney -->
+            <div class="tool-card" style="--index: 5" data-categories="bild">
+                <div class="tool-header">
+                    <div class="tool-icon">🖼️</div>
+                    <h3 class="tool-name">Midjourney</h3>
+                    <p class="tool-type">Künstlerische Bildgenerierung</p>
+                </div>
+                <div class="tool-body">
+                    <p class="tool-description">
+                        Premium Bildgenerierungs-Tool mit besonders künstlerischen und ästhetischen Ergebnissen. Via Discord nutzbar.
+                    </p>
+                    <ul class="tool-features">
+                        <li>Höchste Bildqualität</li>
+                        <li>Künstlerische Stile</li>
+                        <li>Community-Features</li>
+                        <li>Variations-Modus</li>
+                    </ul>
+                    <div class="tool-tags">
+                        <span class="tool-tag">Discord</span>
+                        <span class="tool-tag">Premium</span>
+                        <span class="tool-tag">Kunst</span>
+                    </div>
+                    <div class="tool-footer">
+                        <span class="tool-price premium">Ab $10/Monat</span>
+                        <a href="#" class="tool-link">Details →</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- To-teach.ai -->
+            <div class="tool-card" style="--index: 6" data-categories="text,praesentation">
+                <div class="tool-header">
+                    <div class="tool-icon">📚</div>
+                    <h3 class="tool-name">To-teach.ai</h3>
+                    <p class="tool-type">Unterrichtsmaterial-Generator</p>
+                </div>
+                <div class="tool-body">
+                    <p class="tool-description">
+                        KI-gestütztes Tool zur schnellen Erstellung von Arbeitsblättern, Tests und Unterrichtsmaterialien.
+                    </p>
+                    <ul class="tool-features">
+                        <li>Arbeitsblätter generieren</li>
+                        <li>Multiple-Choice Tests</li>
+                        <li>Lückentexte erstellen</li>
+                        <li>Über Fobizz verfügbar</li>
+                    </ul>
+                    <div class="tool-tags">
+                        <span class="tool-tag">Bildung</span>
+                        <span class="tool-tag">Automatisiert</span>
+                        <span class="tool-tag">Zeitsparend</span>
+                    </div>
+                    <div class="tool-footer">
+                        <span class="tool-price paid">Via Fobizz-Lizenz</span>
+                        <a href="#" class="tool-link">Details →</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Synthesia -->
+            <div class="tool-card" style="--index: 7" data-categories="video">
+                <div class="tool-header">
+                    <div class="tool-icon">🎥</div>
+                    <h3 class="tool-name">Synthesia</h3>
+                    <p class="tool-type">Video-Generator</p>
+                </div>
+                <div class="tool-body">
+                    <p class="tool-description">
+                        Erstelle professionelle Videos mit KI-Avataren. Ideal für Erklärvideos und Präsentationen ohne Kamera.
+                    </p>
+                    <ul class="tool-features">
+                        <li>140+ KI-Avatare</li>
+                        <li>120+ Sprachen</li>
+                        <li>Keine Kamera nötig</li>
+                        <li>Templates verfügbar</li>
+                    </ul>
+                    <div class="tool-tags">
+                        <span class="tool-tag">Video</span>
+                        <span class="tool-tag">Avatar</span>
+                        <span class="tool-tag">Multilingual</span>
+                    </div>
+                    <div class="tool-footer">
+                        <span class="tool-price premium">Ab $30/Monat</span>
+                        <a href="#" class="tool-link">Details →</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ElevenLabs -->
+            <div class="tool-card" style="--index: 8" data-categories="audio">
+                <div class="tool-header">
+                    <div class="tool-icon">🎙️</div>
+                    <h3 class="tool-name">ElevenLabs</h3>
+                    <p class="tool-type">KI-Sprachgenerierung</p>
+                </div>
+                <div class="tool-body">
+                    <p class="tool-description">
+                        Hochqualitative Text-to-Speech KI mit natürlich klingenden Stimmen. Perfekt für Hörbücher und Podcasts.
+                    </p>
+                    <ul class="tool-features">
+                        <li>Natürliche Stimmen</li>
+                        <li>Emotionale Betonung</li>
+                        <li>Voice Cloning</li>
+                        <li>29 Sprachen</li>
+                    </ul>
+                    <div class="tool-tags">
+                        <span class="tool-tag">TTS</span>
+                        <span class="tool-tag">Audio</span>
+                        <span class="tool-tag">Stimmen</span>
+                    </div>
+                    <div class="tool-footer">
+                        <span class="tool-price free">Kostenlos / Pro: $5/Monat</span>
+                        <a href="#" class="tool-link">Details →</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Perplexity -->
+            <div class="tool-card" style="--index: 9" data-categories="text,kostenlos">
+                <div class="tool-header">
+                    <div class="tool-icon">🔎</div>
+                    <h3 class="tool-name">Perplexity AI</h3>
+                    <p class="tool-type">KI-Suchmaschine</p>
+                </div>
+                <div class="tool-body">
+                    <p class="tool-description">
+                        KI-gestützte Suchmaschine mit Quellenangaben. Ideal für Recherchen und faktenbasierte Antworten.
+                    </p>
+                    <ul class="tool-features">
+                        <li>Aktuelle Informationen</li>
+                        <li>Quellenangaben</li>
+                        <li>Follow-up Fragen</li>
+                        <li>PDF-Analyse</li>
+                    </ul>
+                    <div class="tool-tags">
+                        <span class="tool-tag">Recherche</span>
+                        <span class="tool-tag">Quellen</span>
+                        <span class="tool-tag">Aktuell</span>
+                    </div>
+                    <div class="tool-footer">
+                        <span class="tool-price free">Kostenlos / Pro: $20/Monat</span>
+                        <a href="#" class="tool-link">Details →</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Canva Magic -->
+            <div class="tool-card" style="--index: 10" data-categories="bild,praesentation">
+                <div class="tool-header">
+                    <div class="tool-icon">✨</div>
+                    <h3 class="tool-name">Canva Magic</h3>
+                    <p class="tool-type">Design-Assistent</p>
+                </div>
+                <div class="tool-body">
+                    <p class="tool-description">
+                        KI-Features in Canva für automatisches Design, Bildbearbeitung und Präsentationserstellung.
+                    </p>
+                    <ul class="tool-features">
+                        <li>Magic Design</li>
+                        <li>Hintergrund entfernen</li>
+                        <li>Text zu Bild</li>
+                        <li>Präsentationen</li>
+                    </ul>
+                    <div class="tool-tags">
+                        <span class="tool-tag">Design</span>
+                        <span class="tool-tag">Einfach</span>
+                        <span class="tool-tag">Templates</span>
+                    </div>
+                    <div class="tool-footer">
+                        <span class="tool-price free">Kostenlos / Pro: €12/Monat</span>
+                        <a href="#" class="tool-link">Details →</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DeepL Write -->
+            <div class="tool-card" style="--index: 11" data-categories="text,kostenlos">
+                <div class="tool-header">
+                    <div class="tool-icon">✍️</div>
+                    <h3 class="tool-name">DeepL Write</h3>
+                    <p class="tool-type">Schreibassistent</p>
+                </div>
+                <div class="tool-body">
+                    <p class="tool-description">
+                        KI-gestützter Schreibassistent für perfekte Texte. Verbessert Grammatik, Stil und Ausdrucksweise.
+                    </p>
+                    <ul class="tool-features">
+                        <li>Grammatikkorrektur</li>
+                        <li>Stilverbesserung</li>
+                        <li>Mehrsprachig</li>
+                        <li>Ton anpassbar</li>
+                    </ul>
+                    <div class="tool-tags">
+                        <span class="tool-tag">Korrektur</span>
+                        <span class="tool-tag">Deutsch</span>
+                        <span class="tool-tag">Präzise</span>
+                    </div>
+                    <div class="tool-footer">
+                        <span class="tool-price free">Kostenlos</span>
+                        <a href="#" class="tool-link">Details →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Info Cards Section -->
+        <section style="margin: 4rem 0;">
+            <h2 style="text-align: center; margin-bottom: 2rem; color: var(--text-primary);">💡 Wichtige Hinweise</h2>
+            <div class="info-cards">
+                <div class="info-card">
+                    <div class="info-icon">🔒</div>
+                    <h3 class="info-title">Datenschutz beachten</h3>
+                    <p class="info-text">Keine personenbezogenen Daten in öffentliche KI-Tools eingeben. Schulversionen bevorzugen.</p>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">✅</div>
+                    <h3 class="info-title">Ergebnisse prüfen</h3>
+                    <p class="info-text">KI-generierte Inhalte immer auf Richtigkeit überprüfen. Kritisches Denken fördern.</p>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">📝</div>
+                    <h3 class="info-title">Transparenz</h3>
+                    <p class="info-text">KI-Nutzung kennzeichnen und Schüler über verwendete Tools informieren.</p>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">🎯</div>
+                    <h3 class="info-title">Didaktischer Mehrwert</h3>
+                    <p class="info-text">KI als Werkzeug einsetzen, nicht als Ersatz für pädagogische Arbeit.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Comparison Section -->
+        <section class="comparison-section">
+            <h2 class="comparison-title">📊 Tool-Vergleich</h2>
+            <div class="comparison-table">
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tool</th>
+                                <th>Kostenlose Version</th>
+                                <th>DSGVO-konform</th>
+                                <th>Deutsch</th>
+                                <th>API</th>
+                                <th>Schullizenz</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>ChatGPT</strong></td>
+                                <td><span class="feature-check">✓</span></td>
+                                <td><span class="feature-cross">✗</span></td>
+                                <td><span class="feature-check">✓</span></td>
+                                <td><span class="feature-check">✓</span></td>
+                                <td><span class="feature-cross">✗</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Claude</strong></td>
+                                <td><span class="feature-check">✓</span></td>
+                                <td><span class="feature-cross">✗</span></td>
+                                <td><span class="feature-check">✓</span></td>
+                                <td><span class="feature-check">✓</span></td>
+                                <td><span class="feature-cross">✗</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Fobizz</strong></td>
+                                <td><span class="feature-cross">✗</span></td>
+                                <td><span class="feature-check">✓</span></td>
+                                <td><span class="feature-check">✓</span></td>
+                                <td><span class="feature-cross">✗</span></td>
+                                <td><span class="feature-check">✓</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Microsoft Copilot</strong></td>
+                                <td><span class="feature-cross">✗</span></td>
+                                <td><span class="feature-check">✓</span></td>
+                                <td><span class="feature-check">✓</span></td>
+                                <td><span class="feature-check">✓</span></td>
+                                <td><span class="feature-check">✓</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>DeepL Write</strong></td>
+                                <td><span class="feature-check">✓</span></td>
+                                <td><span class="feature-check">✓</span></td>
+                                <td><span class="feature-check">✓</span></td>
+                                <td><span class="feature-cross">✗</span></td>
+                                <td><span class="feature-cross">✗</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Loading indicator -->
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Lade Tools...</p>
+        </div>
+    </div>
+
+    <script>
+        // Filter functionality
+        const filterTags = document.querySelectorAll('.filter-tag');
+        const toolCards = document.querySelectorAll('.tool-card');
+        const searchInput = document.getElementById('searchInput');
+        const toolsGrid = document.getElementById('toolsGrid');
+
+        // Filter by category
+        filterTags.forEach(tag => {
+            tag.addEventListener('click', function() {
+                // Remove active class from all tags
+                filterTags.forEach(t => t.classList.remove('active'));
+                // Add active class to clicked tag
+                this.classList.add('active');
+                
+                const filter = this.dataset.filter;
+                
+                // Show loading animation
+                showLoading();
+                
+                setTimeout(() => {
+                    filterTools(filter);
+                    hideLoading();
+                }, 300);
+            });
+        });
+
+        function filterTools(filter) {
+            toolCards.forEach(card => {
+                if (filter === 'all') {
+                    card.style.display = 'block';
+                } else {
+                    const categories = card.dataset.categories.split(',');
+                    if (categories.includes(filter)) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                }
+            });
+        }
+
+        // Search functionality
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            
+            toolCards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+
+        // Loading functions
+        function showLoading() {
+            document.getElementById('loading').classList.add('active');
+            toolsGrid.style.opacity = '0.3';
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').classList.remove('active');
+            toolsGrid.style.opacity = '1';
+        }
+
+        // Add click animation to cards
+        toolCards.forEach(card => {
+            card.addEventListener('click', function(e) {
+                if (!e.target.classList.contains('tool-link')) {
+                    // Create ripple effect
+                    const ripple = document.createElement('div');
+                    ripple.style.position = 'absolute';
+                    ripple.style.borderRadius = '50%';
+                    ripple.style.background = 'rgba(255, 255, 255, 0.6)';
+                    ripple.style.width = '20px';
+                    ripple.style.height = '20px';
+                    ripple.style.left = e.offsetX - 10 + 'px';
+                    ripple.style.top = e.offsetY - 10 + 'px';
+                    ripple.style.animation = 'ripple 0.6s ease-out';
+                    this.appendChild(ripple);
+                    
+                    setTimeout(() => {
+                        ripple.remove();
+                    }, 600);
+                }
+            });
+        });
+
+        // Add ripple animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    width: 200px;
+                    height: 200px;
+                    margin-left: -90px;
+                    margin-top: -90px;
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Add interactive hover effect for comparison table
+        const tableRows = document.querySelectorAll('tbody tr');
+        tableRows.forEach(row => {
+            row.addEventListener('mouseenter', function() {
+                this.style.background = 'linear-gradient(90deg, #f3f4f6 0%, #ffffff 100%)';
+            });
+            row.addEventListener('mouseleave', function() {
+                this.style.background = '';
+            });
+        });
+    </script>
+</body>
+</html>
