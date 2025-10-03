@@ -1,1 +1,677 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompting Meisterkurs</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .progress {
+            height: 100%;
+            background: white;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+
+        h3 {
+            color: #764ba2;
+            margin: 20px 0 15px 0;
+            font-size: 1.4em;
+        }
+
+        p, li {
+            line-height: 1.8;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .tip-box {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .example-box {
+            background: #f8f9fa;
+            border: 2px dashed #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            gap: 20px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .api-setup {
+            background: #f0f4f8;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .api-input-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        input[type="password"] {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="password"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .chat-container {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .message {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 12px;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .message.user {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            margin-left: 20%;
+        }
+
+        .message.assistant {
+            background: #e8eaf6;
+            color: #333;
+            margin-right: 20%;
+        }
+
+        .message.system {
+            background: #fff3e0;
+            color: #e65100;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .chat-input-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .send-button {
+            padding: 12px 24px;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .score-display {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+
+        .score-display h3 {
+            font-size: 2em;
+            color: #667eea;
+        }
+
+        ul {
+            margin-left: 20px;
+        }
+
+        .highlight {
+            background: linear-gradient(to right, #ffeaa7, #fdcb6e);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 Prompting Meisterkurs</h1>
+            <p class="subtitle">Lerne die Kunst des effektiven Promptings</p>
+            <div class="progress-bar">
+                <div class="progress" id="progress"></div>
+            </div>
+        </header>
+
+        <div class="content">
+            <!-- Section 1: Einführung -->
+            <div class="section active" id="section1">
+                <h2>Willkommen zum Prompting-Tutorial!</h2>
+                <p>In diesem interaktiven Kurs lernst du die wichtigsten Techniken für effektives Prompting mit KI-Modellen wie Claude, ChatGPT und anderen Large Language Models.</p>
+                
+                <div class="tip-box">
+                    <strong>Was erwartet dich?</strong>
+                    <ul>
+                        <li>5 Kernprinzipien des effektiven Promptings</li>
+                        <li>Praktische Beispiele und Techniken</li>
+                        <li>Interaktiver Test mit einem echten KI-Chatbot</li>
+                    </ul>
+                </div>
+
+                <div class="navigation">
+                    <button disabled>Zurück</button>
+                    <button onclick="nextSection()">Los geht's!</button>
+                </div>
+            </div>
+
+            <!-- Section 2: Klarheit und Präzision -->
+            <div class="section" id="section2">
+                <h2>Prinzip 1: Klarheit und Präzision</h2>
+                
+                <p>Der wichtigste Grundsatz beim Prompting ist <span class="highlight">Klarheit</span>. Je präziser deine Anweisungen, desto besser die Ergebnisse.</p>
+
+                <h3>❌ Schlecht:</h3>
+                <div class="example-box">
+                    "Schreib was über Hunde"
+                </div>
+
+                <h3>✅ Gut:</h3>
+                <div class="example-box">
+                    "Schreibe einen 200-Wörter-Artikel über die drei beliebtesten Hunderassen in Deutschland, mit Fokus auf ihre Charaktereigenschaften und Pflegebedürfnisse."
+                </div>
+
+                <div class="tip-box">
+                    <strong>💡 Profi-Tipp:</strong> Verwende die W-Fragen (Was, Wie, Warum, Wann, Wo, Wer) um deinen Prompt zu strukturieren!
+                </div>
+
+                <div class="navigation">
+                    <button onclick="previousSection()">Zurück</button>
+                    <button onclick="nextSection()">Weiter</button>
+                </div>
+            </div>
+
+            <!-- Section 3: Kontext geben -->
+            <div class="section" id="section3">
+                <h2>Prinzip 2: Kontext bereitstellen</h2>
+                
+                <p>KI-Modelle performen besser, wenn sie den <span class="highlight">Kontext</span> und <span class="highlight">Zweck</span> deiner Anfrage verstehen.</p>
+
+                <h3>Beispiel mit Kontext:</h3>
+                <div class="example-box">
+                    "Ich bin ein Biologielehrer und bereite eine Unterrichtsstunde für 8. Klässler vor. Erkläre das Konzept der Photosynthese in einfachen Worten mit einer alltäglichen Analogie."
+                </div>
+
+                <div class="tip-box">
+                    <strong>Kontextelemente die du einbauen kannst:</strong>
+                    <ul>
+                        <li>Deine Rolle oder Hintergrund</li>
+                        <li>Die Zielgruppe</li>
+                        <li>Der Verwendungszweck</li>
+                        <li>Gewünschter Ton oder Stil</li>
+                    </ul>
+                </div>
+
+                <div class="navigation">
+                    <button onclick="previousSection()">Zurück</button>
+                    <button onclick="nextSection()">Weiter</button>
+                </div>
+            </div>
+
+            <!-- Section 4: Beispiele geben -->
+            <div class="section" id="section4">
+                <h2>Prinzip 3: Few-Shot Learning</h2>
+                
+                <p><span class="highlight">Few-Shot Learning</span> bedeutet, der KI Beispiele zu geben, um das gewünschte Format oder den Stil zu demonstrieren.</p>
+
+                <h3>Beispiel-Prompt mit Few-Shot:</h3>
+                <div class="example-box">
+                    "Übersetze die folgenden Sätze ins Französische und füge eine umgangssprachliche Variante hinzu:<br><br>
+                    Beispiel:<br>
+                    Englisch: How are you?<br>
+                    Französisch (formal): Comment allez-vous?<br>
+                    Französisch (umgangssprachlich): Ça va?<br><br>
+                    Jetzt übersetze:<br>
+                    Englisch: Thank you very much"
+                </div>
+
+                <div class="tip-box">
+                    <strong>📌 Merke:</strong> 1-3 gute Beispiele sind oft ausreichend, um das gewünschte Muster zu etablieren.
+                </div>
+
+                <div class="navigation">
+                    <button onclick="previousSection()">Zurück</button>
+                    <button onclick="nextSection()">Weiter</button>
+                </div>
+            </div>
+
+            <!-- Section 5: Schritt-für-Schritt -->
+            <div class="section" id="section5">
+                <h2>Prinzip 4: Chain-of-Thought Prompting</h2>
+                
+                <p>Bei komplexen Aufgaben hilft es, die KI anzuweisen, <span class="highlight">Schritt für Schritt</span> zu denken.</p>
+
+                <h3>Beispiel für Chain-of-Thought:</h3>
+                <div class="example-box">
+                    "Löse folgende Aufgabe Schritt für Schritt:<br><br>
+                    Ein Zug fährt von Berlin nach München (600km) mit einer Durchschnittsgeschwindigkeit von 120 km/h. Er macht zwei Stopps von je 15 Minuten.<br><br>
+                    1. Berechne zuerst die reine Fahrzeit<br>
+                    2. Addiere die Pausenzeiten<br>
+                    3. Gib die Gesamtreisezeit an<br>
+                    4. Erkläre deine Rechnung"
+                </div>
+
+                <div class="tip-box">
+                    <strong>Zauberwörter für bessere Ergebnisse:</strong>
+                    <ul>
+                        <li>"Denke Schritt für Schritt"</li>
+                        <li>"Erkläre deine Überlegungen"</li>
+                        <li>"Lass uns das systematisch angehen"</li>
+                    </ul>
+                </div>
+
+                <div class="navigation">
+                    <button onclick="previousSection()">Zurück</button>
+                    <button onclick="nextSection()">Weiter</button>
+                </div>
+            </div>
+
+            <!-- Section 6: Rollenspiele und Personas -->
+            <div class="section" id="section6">
+                <h2>Prinzip 5: Rollenspiele und Personas</h2>
+                
+                <p>Du kannst der KI eine spezifische <span class="highlight">Rolle</span> oder <span class="highlight">Expertise</span> zuweisen für bessere Ergebnisse.</p>
+
+                <h3>Beispiele für Rollenzuweisungen:</h3>
+                <div class="example-box">
+                    "Du bist ein erfahrener Marketingexperte mit 20 Jahren Erfahrung in der Tech-Branche. Analysiere folgende Werbekampagne..."<br><br>
+                    "Agiere als freundlicher Kindergärtner und erkläre, warum wir uns die Hände waschen sollten..."<br><br>
+                    "Als professioneller Übersetzer mit Schwerpunkt Literatur, übersetze folgenden poetischen Text..."
+                </div>
+
+                <div class="tip-box">
+                    <strong>🎭 Rollentipps:</strong>
+                    <ul>
+                        <li>Sei spezifisch bei der Expertise</li>
+                        <li>Erwähne relevante Erfahrung oder Hintergrund</li>
+                        <li>Definiere den gewünschten Kommunikationsstil</li>
+                    </ul>
+                </div>
+
+                <div class="navigation">
+                    <button onclick="previousSection()">Zurück</button>
+                    <button onclick="nextSection()">Zum Test!</button>
+                </div>
+            </div>
+
+            <!-- Section 7: Chatbot Test -->
+            <div class="section" id="section7">
+                <h2>🎯 Zeit für den Praxistest!</h2>
+                
+                <div class="tip-box" style="background: linear-gradient(135deg, #a8e6cf 0%, #dcedc1 100%); border-left-color: #4CAF50;">
+                    <strong>🤖 Teste dein Prompting-Wissen mit unserem KI-Assistenten!</strong>
+                    <p style="margin-top: 10px;">Der Bot wird deine Prompts analysieren und dir Feedback geben. Probiere verschiedene Techniken aus:</p>
+                    <ul style="margin-top: 10px;">
+                        <li>Gib dem Bot eine spezifische Rolle (z.B. "Du bist ein Mathematiklehrer...")</li>
+                        <li>Nutze Beispiele für bessere Ergebnisse</li>
+                        <li>Fordere Schritt-für-Schritt Erklärungen an</li>
+                        <li>Sei präzise und klar in deinen Anfragen</li>
+                    </ul>
+                </div>
+
+                <div class="example-box" style="background: #f0f9ff; border-color: #0284c7;">
+                    <strong>💡 Beispiel-Prompts zum Ausprobieren:</strong><br><br>
+                    • "Erkläre mir Schritt für Schritt, wie Photosynthese funktioniert"<br>
+                    • "Du bist ein Dichter. Schreibe ein Haiku über Programmierung"<br>
+                    • "Gib mir 3 Beispiele für gute Überschriften. Format: [Emoji] Überschrift"<br>
+                    • "Analysiere diesen Satz und verbessere ihn: 'Das Ding ist gut'"
+                </div>
+
+                <div class="chat-container">
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="message system">
+                            <strong>🎉 Willkommen zum interaktiven Prompting-Test!</strong><br><br>
+                            Ich bin dein KI-Assistent und werde dir helfen, deine Prompting-Fähigkeiten zu verbessern. 
+                            Stelle mir Fragen, gib mir Aufgaben oder teste die Techniken, die du gerade gelernt hast. 
+                            Ich gebe dir Feedback zu deinen Prompts!
+                        </div>
+                    </div>
+                    <div class="chat-input-group">
+                        <input type="text" class="chat-input" id="chatInput" placeholder="Schreibe deinen Prompt hier... (z.B. 'Erkläre mir...' oder 'Du bist ein...')" onkeypress="handleKeyPress(event)" />
+                        <button class="send-button" onclick="sendMessage()" id="sendButton">
+                            <span id="buttonText">Senden</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="navigation">
+                    <button onclick="previousSection()">Zurück zum Tutorial</button>
+                    <button onclick="showResults()">Ergebnisse</button>
+                </div>
+            </div>
+
+            <!-- Section 8: Ergebnisse -->
+            <div class="section" id="section8">
+                <h2>🏆 Glückwunsch!</h2>
+                
+                <div class="score-display">
+                    <h3>Du hast den Prompting-Kurs abgeschlossen!</h3>
+                    <p style="margin-top: 20px; font-size: 1.2em;">Du bist jetzt bereit, effektive Prompts zu schreiben!</p>
+                </div>
+
+                <div class="tip-box">
+                    <strong>Zusammenfassung der wichtigsten Techniken:</strong>
+                    <ul>
+                        <li>✅ Klarheit und Präzision in deinen Anfragen</li>
+                        <li>✅ Kontext und Hintergrundinformationen bereitstellen</li>
+                        <li>✅ Few-Shot Learning mit Beispielen</li>
+                        <li>✅ Chain-of-Thought für komplexe Aufgaben</li>
+                        <li>✅ Rollenzuweisungen für spezifische Expertise</li>
+                    </ul>
+                </div>
+
+                <div class="navigation">
+                    <button onclick="restartTutorial()">Tutorial wiederholen</button>
+                    <button onclick="goToSection(7)">Zurück zum Chat</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentSection = 1;
+        const totalSections = 8;
+        
+        // ⚠️ WICHTIG: Ersetze diese URL mit deiner Cloudflare Worker URL ⚠️
+        // Format: https://worker-name.dein-username.workers.dev
+        const WORKER_API_URL = 'https://promptingbot.cglaus.workers.dev/'; // ← HIER EINSETZEN!
+        
+        // Speichere alle Chat-Nachrichten für Kontext
+        let chatHistory = [];
+
+        function updateProgress() {
+            const progress = (currentSection / totalSections) * 100;
+            document.getElementById('progress').style.width = progress + '%';
+        }
+
+        function goToSection(sectionNumber) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById('section' + sectionNumber).classList.add('active');
+            currentSection = sectionNumber;
+            updateProgress();
+            window.scrollTo(0, 0);
+        }
+
+        function nextSection() {
+            if (currentSection < totalSections) {
+                goToSection(currentSection + 1);
+            }
+        }
+
+        function previousSection() {
+            if (currentSection > 1) {
+                goToSection(currentSection - 1);
+            }
+        }
+
+        function restartTutorial() {
+            goToSection(1);
+        }
+
+        function showResults() {
+            goToSection(8);
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            const sendButton = document.getElementById('sendButton');
+            const buttonText = document.getElementById('buttonText');
+            
+            if (!message) return;
+            
+            // Validierung
+            if (message.length > 1000) {
+                alert('Nachricht zu lang! Maximum: 1000 Zeichen');
+                return;
+            }
+
+            const messagesContainer = document.getElementById('chatMessages');
+            
+            // Füge Benutzernachricht hinzu
+            const userMessage = document.createElement('div');
+            userMessage.className = 'message user';
+            userMessage.textContent = message;
+            messagesContainer.appendChild(userMessage);
+            
+            // Füge zur Historie hinzu
+            chatHistory.push({ role: 'user', content: message });
+            
+            input.value = '';
+            input.disabled = true;
+            sendButton.disabled = true;
+            buttonText.textContent = '⏳ Denkt nach...';
+            
+            // Zeige Ladeindikator
+            const loadingMessage = document.createElement('div');
+            loadingMessage.className = 'message assistant';
+            loadingMessage.innerHTML = '<div class="loading"></div> KI denkt nach...';
+            messagesContainer.appendChild(loadingMessage);
+            
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            
+            try {
+                // ⚠️ CLOUDFLARE WORKER API AUFRUF ⚠️
+                const response = await fetch(WORKER_API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        history: chatHistory.slice(-10) // Sende nur die letzten 10 Nachrichten
+                    })
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'API-Anfrage fehlgeschlagen');
+                }
+                
+                const data = await response.json();
+                
+                // Entferne Ladeindikator
+                messagesContainer.removeChild(loadingMessage);
+                
+                // Füge KI-Antwort hinzu
+                const assistantMessage = document.createElement('div');
+                assistantMessage.className = 'message assistant';
+                assistantMessage.textContent = data.choices[0].message.content;
+                messagesContainer.appendChild(assistantMessage);
+                
+                // Füge zur Historie hinzu
+                chatHistory.push({ 
+                    role: 'assistant', 
+                    content: data.choices[0].message.content 
+                });
+                
+            } catch (error) {
+                messagesContainer.removeChild(loadingMessage);
+                
+                const errorMessage = document.createElement('div');
+                errorMessage.className = 'message system';
+                errorMessage.innerHTML = `<strong>❌ Fehler:</strong> ${error.message}<br><br>
+                    <em>Mögliche Lösungen:</em><br>
+                    • Stelle sicher, dass die Cloudflare Worker URL korrekt ist<br>
+                    • Prüfe deine Internetverbindung<br>
+                    • Versuche es in ein paar Sekunden erneut`;
+                messagesContainer.appendChild(errorMessage);
+            } finally {
+                input.disabled = false;
+                sendButton.disabled = false;
+                buttonText.textContent = 'Senden';
+                input.focus();
+            }
+            
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        }
+
+        // Initialisierung
+        updateProgress();
+    </script>
+</body>
+</html>
