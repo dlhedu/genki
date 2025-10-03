@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GenKI Hub - KI im Bildungskontext</title>
+    <title>GenKI Docs - KI im Bildungskontext</title>
     <style>
         * {
             margin: 0;
@@ -14,542 +14,962 @@
         :root {
             --primary: #2563eb;
             --primary-dark: #1e40af;
+            --primary-light: #dbeafe;
             --secondary: #10b981;
             --accent: #8b5cf6;
-            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --card-bg: rgba(255, 255, 255, 0.95);
-            --text-primary: #1f2937;
+            --bg-main: #ffffff;
+            --bg-secondary: #f9fafb;
+            --bg-code: #f3f4f6;
+            --border: #e5e7eb;
+            --text-primary: #111827;
             --text-secondary: #6b7280;
-            --hover-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            --text-muted: #9ca3af;
+            --sidebar-width: 280px;
+            --header-height: 60px;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg-main);
             color: var(--text-primary);
-            position: relative;
-            overflow-x: hidden;
+            line-height: 1.6;
         }
 
-        /* Animated background particles */
-        .particles {
+        /* Header */
+        .header {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            opacity: 0.5;
+            right: 0;
+            height: var(--header-height);
+            background: var(--bg-main);
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
         }
 
-        .particle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: var(--primary);
-            border-radius: 50%;
-            animation: float 20s infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(100vh) translateX(0); opacity: 0; }
-            10%, 90% { opacity: 1; }
-            100% { transform: translateY(-100vh) translateX(100px); }
-        }
-
-        .container {
-            max-width: 1200px;
+        .header-content {
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 2rem;
-            position: relative;
-            z-index: 1;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .logo-text {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .header-nav {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .header-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        .header-link:hover {
+            color: var(--primary);
+        }
+
+        .github-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .github-link:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Layout Container */
+        .layout {
+            display: flex;
+            margin-top: var(--header-height);
+            min-height: calc(100vh - var(--header-height));
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            padding: 2rem 0;
+            position: fixed;
+            height: calc(100vh - var(--header-height));
+            overflow-y: auto;
+            transition: transform 0.3s;
+        }
+
+        .sidebar-section {
+            margin-bottom: 2rem;
+            padding: 0 1.5rem;
+        }
+
+        .sidebar-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+            margin-bottom: 0.75rem;
+        }
+
+        .sidebar-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 0.75rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .sidebar-link:hover {
+            background: var(--bg-main);
+            color: var(--primary);
+        }
+
+        .sidebar-link.active {
+            background: var(--primary-light);
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .sidebar-icon {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 2rem 3rem;
+            max-width: 900px;
+        }
+
+        /* Breadcrumbs */
+        .breadcrumbs {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        .breadcrumb-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .breadcrumb-link:hover {
+            color: var(--primary);
+        }
+
+        .breadcrumb-separator {
+            color: var(--text-muted);
         }
 
         /* Hero Section */
         .hero {
-            text-align: center;
-            padding: 4rem 0;
-            position: relative;
+            margin-bottom: 3rem;
         }
 
-        .logo {
-            display: inline-block;
-            margin-bottom: 2rem;
-            position: relative;
-        }
-
-        .logo-icon {
-            width: 80px;
-            height: 80px;
-            background: var(--bg-gradient);
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .hero h1 {
             font-size: 2.5rem;
-            color: white;
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
-            animation: pulse 3s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        h1 {
-            font-size: 3rem;
-            background: var(--bg-gradient);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 1rem;
-            animation: fadeInDown 1s ease;
         }
 
-        .subtitle {
+        .hero-description {
             font-size: 1.25rem;
             color: var(--text-secondary);
-            margin-bottom: 3rem;
-            animation: fadeInUp 1s ease 0.2s both;
+            margin-bottom: 2rem;
+            line-height: 1.6;
         }
 
-        /* Navigation Pills */
-        .nav-pills {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            flex-wrap: wrap;
-            margin-bottom: 4rem;
-            animation: fadeIn 1s ease 0.4s both;
-        }
-
-        .nav-pill {
-            padding: 0.5rem 1.5rem;
-            background: white;
-            border-radius: 20px;
-            color: var(--text-primary);
-            text-decoration: none;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            font-size: 0.9rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .nav-pill::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: var(--bg-gradient);
-            transition: left 0.3s ease;
-            z-index: -1;
-        }
-
-        .nav-pill:hover {
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: var(--hover-shadow);
-        }
-
-        .nav-pill:hover::before {
-            left: 0;
-        }
-
-        /* Main Grid */
-        .grid {
+        /* Quick Actions */
+        .quick-actions {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
             margin-bottom: 3rem;
         }
 
-        .card {
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 2rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
+        .quick-action {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: all 0.2s;
+        }
+
+        .quick-action:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        .quick-action-icon {
+            font-size: 1.5rem;
+        }
+
+        .quick-action-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .quick-action-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .quick-action-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* Content Sections */
+        .content-section {
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        .cards-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .doc-card {
+            display: flex;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s;
             position: relative;
             overflow: hidden;
-            animation: fadeInUp 1s ease calc(var(--delay) * 0.1s) both;
         }
 
-        .card::before {
+        .doc-card::before {
             content: '';
             position: absolute;
-            top: 0;
             left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--bg-gradient);
-            transform: scaleX(0);
-            transition: transform 0.3s ease;
-            transform-origin: left;
-        }
-
-        .card:hover {
-            transform: translateY(-10px);
-            box-shadow: var(--hover-shadow);
-        }
-
-        .card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .card-icon {
-            width: 50px;
-            height: 50px;
+            top: 0;
+            bottom: 0;
+            width: 4px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 15px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .doc-card:hover {
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            transform: translateX(4px);
+        }
+
+        .doc-card:hover::before {
+            opacity: 1;
+        }
+
+        .doc-card-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--bg-secondary);
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.5rem;
-            color: white;
-            margin-bottom: 1rem;
-            transition: transform 0.3s ease;
+            flex-shrink: 0;
         }
 
-        .card:hover .card-icon {
-            transform: rotate(10deg) scale(1.1);
+        .doc-card-content {
+            flex: 1;
         }
 
-        .card h3 {
-            font-size: 1.25rem;
-            margin-bottom: 0.75rem;
+        .doc-card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
             color: var(--text-primary);
         }
 
-        .card p {
+        .doc-card-description {
             color: var(--text-secondary);
-            line-height: 1.6;
-            margin-bottom: 1rem;
+            font-size: 0.95rem;
+            line-height: 1.5;
         }
 
-        .card-link {
+        .doc-card-meta {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.75rem;
+        }
+
+        .meta-tag {
             display: inline-flex;
             align-items: center;
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 500;
-            transition: gap 0.3s ease;
-            gap: 0.5rem;
+            gap: 0.25rem;
+            padding: 0.25rem 0.75rem;
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
         }
 
-        .card-link:hover {
-            gap: 1rem;
+        /* Stats Section */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
         }
 
-        /* Quick Stats */
-        .stats {
-            display: flex;
-            justify-content: center;
-            gap: 3rem;
-            margin: 3rem 0;
-            flex-wrap: wrap;
-            animation: fadeIn 1s ease 0.8s both;
-        }
-
-        .stat {
+        .stat-card {
+            padding: 1.5rem;
+            background: var(--bg-secondary);
+            border-radius: 12px;
             text-align: center;
         }
 
         .stat-number {
-            font-size: 2.5rem;
-            font-weight: bold;
-            background: var(--bg-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.25rem;
         }
 
         .stat-label {
             color: var(--text-secondary);
             font-size: 0.9rem;
-            margin-top: 0.25rem;
         }
 
-        /* Interactive Features */
-        .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
-            margin: 2rem 0;
+        /* On This Page TOC */
+        .toc {
+            position: fixed;
+            right: 2rem;
+            top: calc(var(--header-height) + 2rem);
+            width: 200px;
+            padding-left: 2rem;
         }
 
-        .feature-tag {
-            padding: 0.75rem;
-            background: white;
-            border-radius: 10px;
-            text-align: center;
-            font-size: 0.9rem;
-            color: var(--text-primary);
-            transition: all 0.3s ease;
-            cursor: pointer;
-            border: 2px solid transparent;
+        .toc-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
         }
 
-        .feature-tag:hover {
-            border-color: var(--primary);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        .toc-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
         }
 
-        /* Footer */
-        .footer {
-            text-align: center;
-            padding: 2rem 0;
+        .toc-link {
             color: var(--text-secondary);
+            text-decoration: none;
             font-size: 0.9rem;
-            border-top: 1px solid rgba(0,0,0,0.1);
-            margin-top: 4rem;
+            padding-left: 1rem;
+            border-left: 2px solid var(--border);
+            transition: all 0.2s;
         }
 
-        /* Animations */
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
+        .toc-link:hover {
+            color: var(--primary);
+            border-left-color: var(--primary);
+        }
+
+        .toc-link.active {
+            color: var(--primary);
+            border-left-color: var(--primary);
+            font-weight: 500;
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .toc {
+                display: none;
             }
         }
 
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        /* Responsive Design */
         @media (max-width: 768px) {
-            h1 {
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .header-nav {
+                display: none;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+                z-index: 99;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 1.5rem;
+            }
+
+            .hero h1 {
                 font-size: 2rem;
             }
-            
-            .subtitle {
-                font-size: 1rem;
-            }
-            
-            .stats {
-                gap: 2rem;
-            }
-            
-            .grid {
+
+            .quick-actions {
                 grid-template-columns: 1fr;
             }
+        }
+
+        /* Code Block Styling */
+        .code-block {
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+        }
+
+        /* Badge Styles */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            background: var(--primary-light);
+            color: var(--primary);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .badge.new {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .badge.beta {
+            background: #fef3c7;
+            color: #b45309;
         }
     </style>
 </head>
 <body>
-    <!-- Animated Background Particles -->
-    <div class="particles"></div>
-
-    <div class="container">
-        <!-- Hero Section -->
-        <header class="hero">
-            <div class="logo">
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="logo">
                 <div class="logo-icon">🤖</div>
-            </div>
-            <h1>GenKI Hub</h1>
-            <p class="subtitle">Künstliche Intelligenz im Bildungskontext - Praxisnah, Innovativ, Vernetzt</p>
+                <span class="logo-text">GenKI Docs</span>
+            </a>
             
-            <!-- Navigation Pills -->
-            <nav class="nav-pills">
-                <a href="ki-toolbox/index.html" class="nav-pill">🛠️ KI-Tools</a>
-                <a href="#guides" class="nav-pill">📚 Leitfäden</a>
-                <a href="#workshops" class="nav-pill">💡 Workshops</a>
-                <a href="#faq" class="nav-pill">❓ FAQ</a>
-                <a href="#community" class="nav-pill">👥 Community</a>
+            <nav class="header-nav">
+                <a href="/docs" class="header-link">Dokumentation</a>
+                <a href="/tutorials" class="header-link">Tutorials</a>
+                <a href="/blog" class="header-link">Blog</a>
+                <a href="https://github.com/yourusername/genki-docs" class="github-link">
+                    <span>⭐</span>
+                    <span>GitHub</span>
+                </a>
             </nav>
-        </header>
-
-        <!-- Quick Stats -->
-        <div class="stats">
-            <div class="stat">
-                <div class="stat-number">50+</div>
-                <div class="stat-label">KI-Tools getestet</div>
-            </div>
-            <div class="stat">
-                <div class="stat-number">100+</div>
-                <div class="stat-label">Praxisbeispiele</div>
-            </div>
-            <div class="stat">
-                <div class="stat-number">25</div>
-                <div class="stat-label">Workshops 2025</div>
-            </div>
+            
+            <button class="mobile-menu-toggle" id="menuToggle">☰</button>
         </div>
+    </header>
 
-        <!-- Main Content Grid -->
-        <main class="grid">
-            <!-- KI-Toolbox -->
-            <article class="card" style="--delay: 1" onclick="window.location.href='ki-toolbox/index.html'">
-                <div class="card-icon">🧰</div>
-                <h3>KI-Toolbox für den Unterricht</h3>
-                <p>Entdecke bewährte KI-Tools für verschiedene Unterrichtsszenarien. Von ChatGPT bis Claude - praktische Anleitungen und Beispiele.</p>
-                <a href="ki-toolbox/index.html" class="card-link">
-                    Zur Toolbox →
-                </a>
-            </article>
+    <!-- Layout Container -->
+    <div class="layout">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">Erste Schritte</div>
+                <div class="sidebar-links">
+                    <a href="/" class="sidebar-link active">
+                        <span class="sidebar-icon">🏠</span>
+                        <span>Übersicht</span>
+                    </a>
+                    <a href="/getting-started" class="sidebar-link">
+                        <span class="sidebar-icon">🚀</span>
+                        <span>Schnellstart</span>
+                    </a>
+                    <a href="/installation" class="sidebar-link">
+                        <span class="sidebar-icon">📦</span>
+                        <span>Installation</span>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="sidebar-section">
+                <div class="sidebar-title">KI-Tools</div>
+                <div class="sidebar-links">
+                    <a href="/ki-toolbox" class="sidebar-link">
+                        <span class="sidebar-icon">🧰</span>
+                        <span>KI-Toolbox</span>
+                    </a>
+                    <a href="/ki-toolbox/chatgpt" class="sidebar-link">
+                        <span class="sidebar-icon">💬</span>
+                        <span>ChatGPT</span>
+                    </a>
+                    <a href="/ki-toolbox/claude" class="sidebar-link">
+                        <span class="sidebar-icon">🤖</span>
+                        <span>Claude</span>
+                    </a>
+                    <a href="/ki-toolbox/fobizz" class="sidebar-link">
+                        <span class="sidebar-icon">🎓</span>
+                        <span>Fobizz</span>
+                    </a>
+                    <a href="/ki-toolbox/comparison" class="sidebar-link">
+                        <span class="sidebar-icon">📊</span>
+                        <span>Tool-Vergleich</span>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="sidebar-section">
+                <div class="sidebar-title">Prompting</div>
+                <div class="sidebar-links">
+                    <a href="/prompting" class="sidebar-link">
+                        <span class="sidebar-icon">✍️</span>
+                        <span>Grundlagen</span>
+                    </a>
+                    <a href="/prompting/techniques" class="sidebar-link">
+                        <span class="sidebar-icon">🎯</span>
+                        <span>Techniken</span>
+                    </a>
+                    <a href="/prompting/examples" class="sidebar-link">
+                        <span class="sidebar-icon">📝</span>
+                        <span>Beispiele</span>
+                    </a>
+                    <a href="/prompting/learner" class="sidebar-link">
+                        <span class="sidebar-icon">👨‍🎓</span>
+                        <span>Für Lernende</span>
+                        <span class="badge new">NEU</span>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="sidebar-section">
+                <div class="sidebar-title">Leitfäden</div>
+                <div class="sidebar-links">
+                    <a href="/guidelines" class="sidebar-link">
+                        <span class="sidebar-icon">📋</span>
+                        <span>Übersicht</span>
+                    </a>
+                    <a href="/guidelines/matura" class="sidebar-link">
+                        <span class="sidebar-icon">🎓</span>
+                        <span>Maturaarbeiten</span>
+                    </a>
+                    <a href="/guidelines/privacy" class="sidebar-link">
+                        <span class="sidebar-icon">🔒</span>
+                        <span>Datenschutz</span>
+                    </a>
+                    <a href="/guidelines/ethics" class="sidebar-link">
+                        <span class="sidebar-icon">⚖️</span>
+                        <span>KI-Ethik</span>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="sidebar-section">
+                <div class="sidebar-title">Community</div>
+                <div class="sidebar-links">
+                    <a href="/community" class="sidebar-link">
+                        <span class="sidebar-icon">👥</span>
+                        <span>Übersicht</span>
+                    </a>
+                    <a href="/workshops" class="sidebar-link">
+                        <span class="sidebar-icon">🎯</span>
+                        <span>Workshops</span>
+                    </a>
+                    <a href="/faq" class="sidebar-link">
+                        <span class="sidebar-icon">❓</span>
+                        <span>FAQ</span>
+                    </a>
+                    <a href="/contact" class="sidebar-link">
+                        <span class="sidebar-icon">📧</span>
+                        <span>Kontakt</span>
+                    </a>
+                </div>
+            </div>
+        </aside>
 
-            <!-- Prompting Guide -->
-            <article class="card" style="--delay: 2" onclick="window.location.href='prompting/index.html'">
-                <div class="card-icon">✍️</div>
-                <h3>Prompting-Strategien</h3>
-                <p>Lerne, wie du mit gezielten Prompts bessere Ergebnisse erzielst. Praktische Tipps und bewährte Techniken.</p>
-                <a href="prompting/index.html" class="card-link">
-                    Prompting lernen →
-                </a>
-            </article>
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Breadcrumbs -->
+            <nav class="breadcrumbs">
+                <a href="/" class="breadcrumb-link">Home</a>
+                <span class="breadcrumb-separator">/</span>
+                <span>Übersicht</span>
+            </nav>
 
-            <!-- FAQ -->
-            <article class="card" style="--delay: 3" onclick="window.location.href='faq/index.html'">
-                <div class="card-icon">💬</div>
-                <h3>Häufige Fragen</h3>
-                <p>Antworten auf die wichtigsten Fragen zu KI im Bildungsbereich - von Datenschutz bis zur praktischen Anwendung.</p>
-                <a href="faq/index.html" class="card-link">
-                    FAQ ansehen →
-                </a>
-            </article>
+            <!-- Hero Section -->
+            <section class="hero">
+                <h1>GenKI Documentation Hub</h1>
+                <p class="hero-description">
+                    Ihre zentrale Anlaufstelle für KI im Bildungskontext. Entdecken Sie Tools, 
+                    Methoden und Best Practices für den erfolgreichen Einsatz künstlicher Intelligenz 
+                    im Unterricht.
+                </p>
+            </section>
 
-            <!-- Workshops -->
-            <article class="card" style="--delay: 4" onclick="window.location.href='workshops/index.html'">
-                <div class="card-icon">🎓</div>
-                <h3>Impuls-Workshops</h3>
-                <p>Praxisnahe Online-Workshops zu aktuellen KI-Themen. Erfahrungsaustausch und konkrete Anwendungsbeispiele.</p>
-                <a href="workshops/index.html" class="card-link">
-                    Workshops entdecken →
+            <!-- Quick Actions -->
+            <section class="quick-actions">
+                <a href="/ki-toolbox" class="quick-action">
+                    <span class="quick-action-icon">🚀</span>
+                    <div class="quick-action-text">
+                        <span class="quick-action-title">Schnellstart</span>
+                        <span class="quick-action-desc">In 5 Minuten startklar</span>
+                    </div>
                 </a>
-            </article>
+                <a href="/prompting" class="quick-action">
+                    <span class="quick-action-icon">✍️</span>
+                    <div class="quick-action-text">
+                        <span class="quick-action-title">Prompting lernen</span>
+                        <span class="quick-action-desc">Effektive KI-Nutzung</span>
+                    </div>
+                </a>
+                <a href="/workshops" class="quick-action">
+                    <span class="quick-action-icon">🎓</span>
+                    <div class="quick-action-text">
+                        <span class="quick-action-title">Workshops</span>
+                        <span class="quick-action-desc">Praxisnahe Schulungen</span>
+                    </div>
+                </a>
+                <a href="/faq" class="quick-action">
+                    <span class="quick-action-icon">💬</span>
+                    <div class="quick-action-text">
+                        <span class="quick-action-title">FAQ</span>
+                        <span class="quick-action-desc">Häufige Fragen</span>
+                    </div>
+                </a>
+            </section>
 
-            <!-- Guidelines -->
-            <article class="card" style="--delay: 5" onclick="window.location.href='guidelines/index.html'">
-                <div class="card-icon">📋</div>
-                <h3>Leitfäden & Handreichungen</h3>
-                <p>Umfassende Anleitungen für Projekt- und Maturitätsarbeiten mit KI. Best Practices und rechtliche Aspekte.</p>
-                <a href="guidelines/index.html" class="card-link">
-                    Leitfäden öffnen →
-                </a>
-            </article>
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">12+</div>
+                    <div class="stat-label">KI-Tools dokumentiert</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">50+</div>
+                    <div class="stat-label">Praxisbeispiele</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">100+</div>
+                    <div class="stat-label">Prompting-Vorlagen</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">25</div>
+                    <div class="stat-label">Workshops 2025</div>
+                </div>
+            </div>
 
-            <!-- Community -->
-            <article class="card" style="--delay: 6" onclick="window.location.href='community/index.html'">
-                <div class="card-icon">🌐</div>
-                <h3>Community & Vernetzung</h3>
-                <p>Tausche dich mit anderen Lehrpersonen aus. Teile Erfahrungen und lerne von Best Practices.</p>
-                <a href="community/index.html" class="card-link">
-                    Zur Community →
-                </a>
-            </article>
+            <!-- KI-Tools Section -->
+            <section class="content-section" id="tools-section">
+                <h2 class="section-title">🧰 KI-Tools & Plattformen</h2>
+                <div class="cards-grid">
+                    <a href="/ki-toolbox" class="doc-card">
+                        <div class="doc-card-icon">🛠️</div>
+                        <div class="doc-card-content">
+                            <h3 class="doc-card-title">KI-Toolbox</h3>
+                            <p class="doc-card-description">
+                                Umfassende Übersicht über alle relevanten KI-Tools für den Bildungsbereich. 
+                                Mit Vergleichen, Anleitungen und praktischen Beispielen.
+                            </p>
+                            <div class="doc-card-meta">
+                                <span class="meta-tag">12 Tools</span>
+                                <span class="meta-tag">DSGVO-Check</span>
+                                <span class="badge new">Aktualisiert</span>
+                            </div>
+                        </div>
+                    </a>
+                    
+                    <a href="/ki-toolbox/chatgpt" class="doc-card">
+                        <div class="doc-card-icon">💬</div>
+                        <div class="doc-card-content">
+                            <h3 class="doc-card-title">ChatGPT Guide</h3>
+                            <p class="doc-card-description">
+                                Detaillierte Anleitung für ChatGPT 4o. Von der Registrierung bis zu 
+                                fortgeschrittenen Techniken für den Unterricht.
+                            </p>
+                            <div class="doc-card-meta">
+                                <span class="meta-tag">GPT-4o</span>
+                                <span class="meta-tag">Multimodal</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Prompting Section -->
+            <section class="content-section" id="prompting-section">
+                <h2 class="section-title">✍️ Prompting & Methoden</h2>
+                <div class="cards-grid">
+                    <a href="/prompting" class="doc-card">
+                        <div class="doc-card-icon">🎯</div>
+                        <div class="doc-card-content">
+                            <h3 class="doc-card-title">Prompting-Grundlagen</h3>
+                            <p class="doc-card-description">
+                                Lernen Sie die Kunst des effektiven Promptings. Mit praktischen Techniken 
+                                und bewährten Strategien für bessere KI-Ergebnisse.
+                            </p>
+                            <div class="doc-card-meta">
+                                <span class="meta-tag">Einsteiger</span>
+                                <span class="meta-tag">Best Practices</span>
+                            </div>
+                        </div>
+                    </a>
+                    
+                    <a href="/prompting/learner" class="doc-card">
+                        <div class="doc-card-icon">👨‍🎓</div>
+                        <div class="doc-card-content">
+                            <h3 class="doc-card-title">Prompting für Lernende</h3>
+                            <p class="doc-card-description">
+                                Spezielle Anleitung für Schüler und Studierende. Wie man KI ethisch und 
+                                effektiv für das eigene Lernen einsetzt.
+                            </p>
+                            <div class="doc-card-meta">
+                                <span class="meta-tag">Schüler</span>
+                                <span class="badge new">NEU</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Guidelines Section -->
+            <section class="content-section" id="guidelines-section">
+                <h2 class="section-title">📋 Leitfäden & Richtlinien</h2>
+                <div class="cards-grid">
+                    <a href="/guidelines/matura" class="doc-card">
+                        <div class="doc-card-icon">🎓</div>
+                        <div class="doc-card-content">
+                            <h3 class="doc-card-title">Maturitätsarbeiten mit KI</h3>
+                            <p class="doc-card-description">
+                                Richtlinien für den Einsatz von KI bei wissenschaftlichen Arbeiten. 
+                                Mit Zitierregeln und ethischen Grundsätzen.
+                            </p>
+                            <div class="doc-card-meta">
+                                <span class="meta-tag">Wissenschaft</span>
+                                <span class="meta-tag">Ethik</span>
+                            </div>
+                        </div>
+                    </a>
+                    
+                    <a href="/guidelines/privacy" class="doc-card">
+                        <div class="doc-card-icon">🔒</div>
+                        <div class="doc-card-content">
+                            <h3 class="doc-card-title">Datenschutz & DSGVO</h3>
+                            <p class="doc-card-description">
+                                Wichtige Informationen zum datenschutzkonformen Einsatz von KI-Tools 
+                                im schulischen Kontext.
+                            </p>
+                            <div class="doc-card-meta">
+                                <span class="meta-tag">DSGVO</span>
+                                <span class="meta-tag">Compliance</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Community Section -->
+            <section class="content-section" id="community-section">
+                <h2 class="section-title">👥 Community & Support</h2>
+                <div class="cards-grid">
+                    <a href="/workshops" class="doc-card">
+                        <div class="doc-card-icon">🎯</div>
+                        <div class="doc-card-content">
+                            <h3 class="doc-card-title">Impuls-Workshops</h3>
+                            <p class="doc-card-description">
+                                Regelmäßige Online-Workshops zu aktuellen KI-Themen. Mit praktischen 
+                                Übungen und Erfahrungsaustausch.
+                            </p>
+                            <div class="doc-card-meta">
+                                <span class="meta-tag">Online</span>
+                                <span class="meta-tag">Interaktiv</span>
+                                <span class="badge beta">25 Termine</span>
+                            </div>
+                        </div>
+                    </a>
+                    
+                    <a href="/faq" class="doc-card">
+                        <div class="doc-card-icon">❓</div>
+                        <div class="doc-card-content">
+                            <h3 class="doc-card-title">Häufige Fragen</h3>
+                            <p class="doc-card-description">
+                                Antworten auf die wichtigsten Fragen zu KI im Bildungsbereich. 
+                                Von technischen Details bis zu pädagogischen Konzepten.
+                            </p>
+                            <div class="doc-card-meta">
+                                <span class="meta-tag">Support</span>
+                                <span class="meta-tag">Hilfe</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </section>
         </main>
 
-        <!-- Feature Tags -->
-        <section>
-            <h2 style="text-align: center; margin: 3rem 0 2rem; color: var(--text-primary);">Schnellzugriff Themen</h2>
-            <div class="feature-grid">
-                <div class="feature-tag" onclick="window.location.href='ki-toolbox/index.html#chatgpt'">ChatGPT 4o</div>
-                <div class="feature-tag" onclick="window.location.href='ki-toolbox/index.html#claude'">Claude 3.5</div>
-                <div class="feature-tag" onclick="window.location.href='ki-toolbox/index.html#fobizz'">Fobizz</div>
-                <div class="feature-tag" onclick="window.location.href='guidelines/index.html#datenschutz'">Datenschutz</div>
-                <div class="feature-tag" onclick="window.location.href='prompting/index.html#basics'">Prompt-Basics</div>
-                <div class="feature-tag" onclick="window.location.href='faq/index.html#korrigieren'">KI-Korrektur</div>
-                <div class="feature-tag" onclick="window.location.href='workshops/index.html#aktuell'">Aktuelle Workshops</div>
-                <div class="feature-tag" onclick="window.location.href='guidelines/index.html#erkennung'">KI-Erkennung</div>
-            </div>
-        </section>
-
-        <!-- Footer -->
-        <footer class="footer">
-            <p>GenKI Hub - Ein Projekt für digitale Bildung | Stand: Oktober 2025</p>
-            <p style="margin-top: 0.5rem;">
-                <a href="https://github.com/yourusername/genki-hub" style="color: var(--primary); text-decoration: none;">GitHub</a> |
-                <a href="mailto:contact@genki-hub.ch" style="color: var(--primary); text-decoration: none;">Kontakt</a> |
-                <a href="impressum.html" style="color: var(--primary); text-decoration: none;">Impressum</a>
-            </p>
-        </footer>
+        <!-- Table of Contents (On This Page) -->
+        <aside class="toc">
+            <div class="toc-title">Auf dieser Seite</div>
+            <nav class="toc-links">
+                <a href="#tools-section" class="toc-link">KI-Tools</a>
+                <a href="#prompting-section" class="toc-link">Prompting</a>
+                <a href="#guidelines-section" class="toc-link">Leitfäden</a>
+                <a href="#community-section" class="toc-link">Community</a>
+            </nav>
+        </aside>
     </div>
 
     <script>
-        // Create floating particles
-        const particlesContainer = document.querySelector('.particles');
-        for (let i = 0; i < 20; i++) {
-            const particle = document.createElement('div');
-            particle.className = 'particle';
-            particle.style.left = Math.random() * 100 + '%';
-            particle.style.animationDelay = Math.random() * 20 + 's';
-            particle.style.animationDuration = 15 + Math.random() * 10 + 's';
-            particlesContainer.appendChild(particle);
-        }
-
-        // Add smooth scroll behavior
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth' });
-                }
-            });
+        // Mobile menu toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
         });
 
-        // Add interactive hover effects to cards
-        document.querySelectorAll('.card').forEach(card => {
-            card.addEventListener('mouseenter', function() {
-                this.style.transform = 'translateY(-10px) rotateX(2deg)';
-            });
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768) {
+                if (!sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
+                    sidebar.classList.remove('active');
+                }
+            }
+        });
+
+        // Active TOC link based on scroll
+        const sections = document.querySelectorAll('.content-section');
+        const tocLinks = document.querySelectorAll('.toc-link');
+
+        function updateActiveSection() {
+            const scrollPos = window.scrollY + 100;
             
-            card.addEventListener('mouseleave', function() {
-                this.style.transform = 'translateY(0) rotateX(0)';
-            });
-        });
-
-        // Dynamic counter animation for stats
-        const animateValue = (element, start, end, duration) => {
-            let startTimestamp = null;
-            const step = (timestamp) => {
-                if (!startTimestamp) startTimestamp = timestamp;
-                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-                element.innerHTML = Math.floor(progress * (end - start) + start) + (element.innerHTML.includes('+') ? '+' : '');
-                if (progress < 1) {
-                    window.requestAnimationFrame(step);
-                }
-            };
-            window.requestAnimationFrame(step);
-        };
-
-        // Trigger counter animation when stats come into view
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const statNumbers = document.querySelectorAll('.stat-number');
-                    animateValue(statNumbers[0], 0, 50, 2000);
-                    animateValue(statNumbers[1], 0, 100, 2000);
-                    animateValue(statNumbers[2], 0, 25, 2000);
-                    observer.disconnect();
+            sections.forEach((section, index) => {
+                const sectionTop = section.offsetTop;
+                const sectionBottom = sectionTop + section.offsetHeight;
+                
+                if (scrollPos >= sectionTop && scrollPos < sectionBottom) {
+                    tocLinks.forEach(link => link.classList.remove('active'));
+                    tocLinks[index]?.classList.add('active');
                 }
             });
-        });
-
-        const statsSection = document.querySelector('.stats');
-        if (statsSection) {
-            observer.observe(statsSection);
         }
+
+        window.addEventListener('scroll', updateActiveSection);
+        updateActiveSection();
+
+        // Smooth scroll for TOC links
+        tocLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                
+                if (targetSection) {
+                    targetSection.scrollIntoView({ 
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add current path highlighting in sidebar
+        const currentPath = window.location.pathname;
+        const sidebarLinks = document.querySelectorAll('.sidebar-link');
+        
+        sidebarLinks.forEach(link => {
+            if (link.getAttribute('href') === currentPath) {
+                link.classList.add('active');
+            }
+        });
     </script>
 </body>
 </html>
