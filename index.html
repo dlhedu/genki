@@ -1,1 +1,555 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GenKI Hub - KI im Bildungskontext</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --secondary: #10b981;
+            --accent: #8b5cf6;
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --hover-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated background particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.5;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--primary);
+            border-radius: 50%;
+            animation: float 20s infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(100vh) translateX(0); opacity: 0; }
+            10%, 90% { opacity: 1; }
+            100% { transform: translateY(-100vh) translateX(100px); }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+            position: relative;
+        }
+
+        .logo {
+            display: inline-block;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .logo-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--bg-gradient);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: white;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        h1 {
+            font-size: 3rem;
+            background: var(--bg-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+            animation: fadeInDown 1s ease;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            animation: fadeInUp 1s ease 0.2s both;
+        }
+
+        /* Navigation Pills */
+        .nav-pills {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 4rem;
+            animation: fadeIn 1s ease 0.4s both;
+        }
+
+        .nav-pill {
+            padding: 0.5rem 1.5rem;
+            background: white;
+            border-radius: 20px;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            font-size: 0.9rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-pill::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-gradient);
+            transition: left 0.3s ease;
+            z-index: -1;
+        }
+
+        .nav-pill:hover {
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: var(--hover-shadow);
+        }
+
+        .nav-pill:hover::before {
+            left: 0;
+        }
+
+        /* Main Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 1s ease calc(var(--delay) * 0.1s) both;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--bg-gradient);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+            transform-origin: left;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--hover-shadow);
+        }
+
+        .card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            margin-bottom: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover .card-icon {
+            transform: rotate(10deg) scale(1.1);
+        }
+
+        .card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+
+        .card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .card-link {
+            display: inline-flex;
+            align-items: center;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: gap 0.3s ease;
+            gap: 0.5rem;
+        }
+
+        .card-link:hover {
+            gap: 1rem;
+        }
+
+        /* Quick Stats */
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin: 3rem 0;
+            flex-wrap: wrap;
+            animation: fadeIn 1s ease 0.8s both;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: var(--bg-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
+        }
+
+        /* Interactive Features */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .feature-tag {
+            padding: 0.75rem;
+            background: white;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .feature-tag:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem 0;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(0,0,0,0.1);
+            margin-top: 4rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .stats {
+                gap: 2rem;
+            }
+            
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background Particles -->
+    <div class="particles"></div>
+
+    <div class="container">
+        <!-- Hero Section -->
+        <header class="hero">
+            <div class="logo">
+                <div class="logo-icon">🤖</div>
+            </div>
+            <h1>GenKI Hub</h1>
+            <p class="subtitle">Künstliche Intelligenz im Bildungskontext - Praxisnah, Innovativ, Vernetzt</p>
+            
+            <!-- Navigation Pills -->
+            <nav class="nav-pills">
+                <a href="#tools" class="nav-pill">🛠️ KI-Tools</a>
+                <a href="#guides" class="nav-pill">📚 Leitfäden</a>
+                <a href="#workshops" class="nav-pill">💡 Workshops</a>
+                <a href="#faq" class="nav-pill">❓ FAQ</a>
+                <a href="#community" class="nav-pill">👥 Community</a>
+            </nav>
+        </header>
+
+        <!-- Quick Stats -->
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-number">50+</div>
+                <div class="stat-label">KI-Tools getestet</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">100+</div>
+                <div class="stat-label">Praxisbeispiele</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">25</div>
+                <div class="stat-label">Workshops 2025</div>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <main class="grid">
+            <!-- KI-Toolbox -->
+            <article class="card" style="--delay: 1" onclick="window.location.href='ki-toolbox.html'">
+                <div class="card-icon">🧰</div>
+                <h3>KI-Toolbox für den Unterricht</h3>
+                <p>Entdecke bewährte KI-Tools für verschiedene Unterrichtsszenarien. Von ChatGPT bis Claude - praktische Anleitungen und Beispiele.</p>
+                <a href="ki-toolbox.html" class="card-link">
+                    Zur Toolbox →
+                </a>
+            </article>
+
+            <!-- Prompting Guide -->
+            <article class="card" style="--delay: 2" onclick="window.location.href='prompting.html'">
+                <div class="card-icon">✍️</div>
+                <h3>Prompting-Strategien</h3>
+                <p>Lerne, wie du mit gezielten Prompts bessere Ergebnisse erzielst. Praktische Tipps und bewährte Techniken.</p>
+                <a href="prompting.html" class="card-link">
+                    Prompting lernen →
+                </a>
+            </article>
+
+            <!-- FAQ -->
+            <article class="card" style="--delay: 3" onclick="window.location.href='faq.html'">
+                <div class="card-icon">💬</div>
+                <h3>Häufige Fragen</h3>
+                <p>Antworten auf die wichtigsten Fragen zu KI im Bildungsbereich - von Datenschutz bis zur praktischen Anwendung.</p>
+                <a href="faq.html" class="card-link">
+                    FAQ ansehen →
+                </a>
+            </article>
+
+            <!-- Workshops -->
+            <article class="card" style="--delay: 4" onclick="window.location.href='workshops.html'">
+                <div class="card-icon">🎓</div>
+                <h3>Impuls-Workshops</h3>
+                <p>Praxisnahe Online-Workshops zu aktuellen KI-Themen. Erfahrungsaustausch und konkrete Anwendungsbeispiele.</p>
+                <a href="workshops.html" class="card-link">
+                    Workshops entdecken →
+                </a>
+            </article>
+
+            <!-- Guidelines -->
+            <article class="card" style="--delay: 5" onclick="window.location.href='guidelines.html'">
+                <div class="card-icon">📋</div>
+                <h3>Leitfäden & Handreichungen</h3>
+                <p>Umfassende Anleitungen für Projekt- und Maturitätsarbeiten mit KI. Best Practices und rechtliche Aspekte.</p>
+                <a href="guidelines.html" class="card-link">
+                    Leitfäden öffnen →
+                </a>
+            </article>
+
+            <!-- Community -->
+            <article class="card" style="--delay: 6" onclick="window.location.href='community.html'">
+                <div class="card-icon">🌐</div>
+                <h3>Community & Vernetzung</h3>
+                <p>Tausche dich mit anderen Lehrpersonen aus. Teile Erfahrungen und lerne von Best Practices.</p>
+                <a href="community.html" class="card-link">
+                    Zur Community →
+                </a>
+            </article>
+        </main>
+
+        <!-- Feature Tags -->
+        <section>
+            <h2 style="text-align: center; margin: 3rem 0 2rem; color: var(--text-primary);">Schnellzugriff Themen</h2>
+            <div class="feature-grid">
+                <div class="feature-tag" onclick="window.location.href='ki-toolbox.html#chatgpt'">ChatGPT 4o</div>
+                <div class="feature-tag" onclick="window.location.href='ki-toolbox.html#claude'">Claude 3.5</div>
+                <div class="feature-tag" onclick="window.location.href='ki-toolbox.html#fobizz'">Fobizz</div>
+                <div class="feature-tag" onclick="window.location.href='guidelines.html#datenschutz'">Datenschutz</div>
+                <div class="feature-tag" onclick="window.location.href='prompting.html#basics'">Prompt-Basics</div>
+                <div class="feature-tag" onclick="window.location.href='faq.html#korrigieren'">KI-Korrektur</div>
+                <div class="feature-tag" onclick="window.location.href='workshops.html#aktuell'">Aktuelle Workshops</div>
+                <div class="feature-tag" onclick="window.location.href='guidelines.html#erkennung'">KI-Erkennung</div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>GenKI Hub - Ein Projekt für digitale Bildung | Stand: Oktober 2025</p>
+            <p style="margin-top: 0.5rem;">
+                <a href="https://github.com/yourusername/genki-hub" style="color: var(--primary); text-decoration: none;">GitHub</a> |
+                <a href="mailto:contact@genki-hub.ch" style="color: var(--primary); text-decoration: none;">Kontakt</a> |
+                <a href="impressum.html" style="color: var(--primary); text-decoration: none;">Impressum</a>
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // Create floating particles
+        const particlesContainer = document.querySelector('.particles');
+        for (let i = 0; i < 20; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 20 + 's';
+            particle.style.animationDuration = 15 + Math.random() * 10 + 's';
+            particlesContainer.appendChild(particle);
+        }
+
+        // Add smooth scroll behavior
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Add interactive hover effects to cards
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px) rotateX(2deg)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) rotateX(0)';
+            });
+        });
+
+        // Dynamic counter animation for stats
+        const animateValue = (element, start, end, duration) => {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                element.innerHTML = Math.floor(progress * (end - start) + start) + (element.innerHTML.includes('+') ? '+' : '');
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        };
+
+        // Trigger counter animation when stats come into view
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const statNumbers = document.querySelectorAll('.stat-number');
+                    animateValue(statNumbers[0], 0, 50, 2000);
+                    animateValue(statNumbers[1], 0, 100, 2000);
+                    animateValue(statNumbers[2], 0, 25, 2000);
+                    observer.disconnect();
+                }
+            });
+        });
+
+        const statsSection = document.querySelector('.stats');
+        if (statsSection) {
+            observer.observe(statsSection);
+        }
+    </script>
+</body>
+</html>
